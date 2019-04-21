@@ -40,16 +40,13 @@ class AnimationSystem(Applicator):
     def process(self, world, componentsets):
         for npcdata, frames, motion_type, facing, sprite in componentsets:
 
-            if not npcdata.life:
-                return
-
             self.facing = facing.get()
             self.motion_type = motion_type.get()
 
             if (self.facing != self.last_facing) or (self.motion_type != self.last_motion_type):
                 frames.set(0)
 
-            if frames.get() == self.sprite_sheet.get_sprite_sheet_width(self.motion_type) / 128:
+            if frames.get() == self.sprite_sheet.get_sprite_sheet_width(self.motion_type) / 16:
                 frames.set(0)
 
             self.last_facing = self.facing

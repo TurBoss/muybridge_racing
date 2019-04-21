@@ -50,19 +50,22 @@ class Game:
         x = int(WindowSize.WIDTH / 2)
         y = int(WindowSize.HEIGHT / 2)
 
-        self.all_npc = []
+        self.all_horses = []
 
-        self.horse_sprite_sheet = SpriteSheet("daisy")
-        self.horse_sprite = self.horse_sprite_sheet.get_sprite()
+        for i in range(5):
 
-        self.horse_1 = Horse(self.world, self.horse_sprite, 0, 0)
+            sprite_sheet = SpriteSheet("daisy")
+            sprite = sprite_sheet.get_sprite()
 
-        self.horse_animation = AnimationSystem("daisy")
-        self.horse_movement = MovementSystem(x - 128, y - 128, x + 128, y + 128)
-        # self.all_enemies = [Enemy(self.renderer, self.factory, "doombat")]
+        self.horse = Horse(self.world, sprite, 0, 0)
 
-        self.world.add_system(self.horse_animation)
-        self.world.add_system(self.horse_movement)
+        animation = AnimationSystem("daisy")
+        movement = MovementSystem(x - 128, y - 128, x + 128, y + 128)
+
+        # self.all_horses = [Enemy(self.renderer, self.factory, "doombat")]
+
+        self.world.add_system(animation)
+        self.world.add_system(movement)
 
         self.world.add_system(self.renderer)
 
@@ -200,13 +203,6 @@ class Game:
             # elif game_input.was_key_pressed(SDLK_i):
             #    self.player.toggle_inventory()
 
-            # Player Attack
-            elif game_input.is_key_held(SDLK_SPACE):
-
-                self.horse_1.velocity.vx = 1
-                self.horse_1.velocity.vy = 0
-                self.horse_1.motiontype.set("running")
-
             current_time = SDL_GetTicks()  # units.MS
             elapsed_time = current_time - last_update_time  # units.MS
 
@@ -221,11 +217,7 @@ class Game:
                 SDL_Delay(ms_per_frame - elapsed_time)
 
     def clear(self):
-        self.horse.delete()
-        self.npc.delete()
+        self.horse_1.delete()
 
-        self.world.remove_system(self.player_animation)
-        self.world.remove_system(self.npc_animation)
-
-        self.world.remove_system(self.player_movement)
-        self.world.remove_system(self.npc_movement)
+        self.world.remove_system(self.animation)
+        self.world.remove_system(self.movement)
