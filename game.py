@@ -54,11 +54,11 @@ class Game:
 
         self.horse_sprite_sheet = SpriteSheet("daisy")
         self.horse_sprite = self.horse_sprite_sheet.get_sprite()
-        self.horse = Horse(self.world, self.horse_sprite, 0, 0)
+
+        self.horse_1 = Horse(self.world, self.horse_sprite, 0, 0)
 
         self.horse_animation = AnimationSystem("daisy")
         self.horse_movement = MovementSystem(x - 128, y - 128, x + 128, y + 128)
-
         # self.all_enemies = [Enemy(self.renderer, self.factory, "doombat")]
 
         self.world.add_system(self.horse_animation)
@@ -147,69 +147,65 @@ class Game:
                 self.running = False
                 break
 
-            # Player movement
-            if game_input.is_key_held(SDLK_RIGHT) and game_input.is_key_held(SDLK_UP):
-                player_pos[0] -= speed_x
-                player_pos[1] += speed_y
-                self.horse.velocity.vx = speed_x
-                self.horse.velocity.vy = -speed_y
-                self.horse.facing.set("right_up")
-                self.horse.motiontype.set("walking")
-            elif game_input.is_key_held(SDLK_RIGHT) and game_input.is_key_held(SDLK_DOWN):
-                player_pos[0] -= speed_x
-                player_pos[1] -= speed_y
-                self.horse.velocity.vx = speed_x
-                self.horse.velocity.vy = speed_y
-                self.horse.facing.set("right_down")
-                self.horse.motiontype.set("walking")
-            elif game_input.is_key_held(SDLK_LEFT) and game_input.is_key_held(SDLK_UP):
-                player_pos[0] += speed_x
-                player_pos[1] += speed_y
-                self.horse.velocity.vx = -speed_x
-                self.horse.velocity.vy = -speed_y
-                self.horse.facing.set("left_up")
-                self.horse.motiontype.set("walking")
-            elif game_input.is_key_held(SDLK_LEFT) and game_input.is_key_held(SDLK_DOWN):
-                player_pos[0] += speed_x
-                player_pos[1] -= speed_y
-                self.horse.velocity.vx = -speed_x
-                self.horse.velocity.vy = speed_y
-                self.horse.facing.set("left_down")
-                self.horse.motiontype.set("walking")
-            elif game_input.is_key_held(SDLK_LEFT):
-                player_pos[0] += speed_x
-                self.horse.velocity.vx = -speed_x
-                self.horse.facing.set("left")
-                self.horse.motiontype.set("walking")
-            elif game_input.is_key_held(SDLK_RIGHT):
-                player_pos[0] -= speed_x
-                self.horse.velocity.vx = speed_x
-                self.horse.facing.set("right")
-                self.horse.motiontype.set("walking")
-            elif game_input.is_key_held(SDLK_UP):
-                player_pos[1] += speed_y
-                self.horse.velocity.vy = -speed_y
-                self.horse.facing.set("up")
-                self.horse.motiontype.set("walking")
-            elif game_input.is_key_held(SDLK_DOWN):
-                player_pos[1] -= speed_y
-                self.horse.velocity.vy = speed_y
-                self.horse.facing.set("down")
-                self.horse.motiontype.set("walking")
+            # # Player movement
+            # if game_input.is_key_held(SDLK_RIGHT) and game_input.is_key_held(SDLK_UP):
+            #     player_pos[0] -= speed_x
+            #     player_pos[1] += speed_y
+            #     self.horse.velocity.vx = speed_x
+            #     self.horse.velocity.vy = -speed_y
+            #     self.horse.facing.set("right_up")
+            #     self.horse.motiontype.set("walking")
+            # elif game_input.is_key_held(SDLK_RIGHT) and game_input.is_key_held(SDLK_DOWN):
+            #     player_pos[0] -= speed_x
+            #     player_pos[1] -= speed_y
+            #     self.horse.velocity.vx = speed_x
+            #     self.horse.velocity.vy = speed_y
+            #     self.horse.facing.set("right_down")
+            #     self.horse.motiontype.set("walking")
+            # elif game_input.is_key_held(SDLK_LEFT) and game_input.is_key_held(SDLK_UP):
+            #     player_pos[0] += speed_x
+            #     player_pos[1] += speed_y
+            #     self.horse.velocity.vx = -speed_x
+            #     self.horse.velocity.vy = -speed_y
+            #     self.horse.facing.set("left_up")
+            #     self.horse.motiontype.set("walking")
+            # elif game_input.is_key_held(SDLK_LEFT) and game_input.is_key_held(SDLK_DOWN):
+            #     player_pos[0] += speed_x
+            #     player_pos[1] -= speed_y
+            #     self.horse.velocity.vx = -speed_x
+            #     self.horse.velocity.vy = speed_y
+            #     self.horse.facing.set("left_down")
+            #     self.horse.motiontype.set("walking")
+            # elif game_input.is_key_held(SDLK_LEFT):
+            #     player_pos[0] += speed_x
+            #     self.horse.velocity.vx = -speed_x
+            #     self.horse.facing.set("left")
+            #     self.horse.motiontype.set("walking")
+            # elif game_input.is_key_held(SDLK_RIGHT):
+            #     player_pos[0] -= speed_x
+            #     self.horse.velocity.vx = speed_x
+            #     self.horse.facing.set("right")
+            #     self.horse.motiontype.set("walking")
+            # elif game_input.is_key_held(SDLK_UP):
+            #     player_pos[1] += speed_y
+            #     self.horse.velocity.vy = -speed_y
+            #     self.horse.facing.set("up")
+            #     self.horse.motiontype.set("walking")
+            # elif game_input.is_key_held(SDLK_DOWN):
+            #     player_pos[1] -= speed_y
+            #     self.horse.velocity.vy = speed_y
+            #     self.horse.facing.set("down")
+            #     self.horse.motiontype.set("walking")
 
             # elif game_input.was_key_pressed(SDLK_i):
             #    self.player.toggle_inventory()
 
             # Player Attack
             elif game_input.is_key_held(SDLK_SPACE):
-                pass
-                # motion_type = MotionType.CASTING
 
-            # Nothing
-            else:
-                self.horse.velocity.vx = 0
-                self.horse.velocity.vy = 0
-                self.horse.motiontype.set("standing")
+                self.horse_1.velocity.vx = 1
+                self.horse_1.velocity.vy = 0
+                self.horse_1.motiontype.set("running")
 
             current_time = SDL_GetTicks()  # units.MS
             elapsed_time = current_time - last_update_time  # units.MS

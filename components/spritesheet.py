@@ -33,7 +33,7 @@ class SpriteSheet:
         self.sprite = None
         self.sprite_surface = None
 
-        self.sprite_size = 128, 99
+        self.sprite_size = 128, 90
 
         self.sprites_path = {}
 
