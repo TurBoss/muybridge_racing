@@ -6,15 +6,12 @@ from sdl2 import SDL_GetTicks, \
     SDL_QUIT, \
     SDL_Delay,\
     SDLK_ESCAPE, \
-    SDLK_RIGHT, \
-    SDLK_UP, \
-    SDLK_DOWN, \
-    SDLK_LEFT, \
     SDLK_SPACE
 
 from sdl2.ext import Resources, \
     get_events
 
+from background import Background
 from const import WindowSize
 from db import DataBase
 from input import Input
@@ -24,7 +21,7 @@ from components.spritesheet import SpriteSheet
 from systems.animation import AnimationSystem
 from systems.movement import MovementSystem
 
-FPS = 16  # units.FPS
+FPS = 30  # units.FPS
 MAX_FRAME_TIME = int(5 * (1000 / FPS))
 
 RESOURCES = Resources(__file__, 'resources')
@@ -37,49 +34,55 @@ class Game:
         self.db = DataBase()
 
         self.running = False
+        self.race_running = False
+
         self.world = world
         self.window = window
         self.renderer = renderer
         self.factory = factory
 
-        self.background_tiles = []
-        self.behind_tiles = []
-        self.front_tiles = []
+        self.sky_background = Background(self.world, 0, 0, 1920, 300, "test_sky")
+        self.mountains_background = Background(self.world, 0, 150, 1920, 300, "test_mountains")
+        self.floor_background = Background(self.world, 0, 300, 1920, 500, "test_floor")
+
         self.sprites = []
+
+        for i in range(5):
+            sprite_sheet = SpriteSheet("daisy")
+            sprite = sprite_sheet.get_sprite()
+            self.sprites.append(sprite)
+
+        self.horse_1 = Horse(self.world, self.sprites[0], 128, 256)
+        self.horse_2 = Horse(self.world, self.sprites[1], 128, 256 + 100)
+        self.horse_3 = Horse(self.world, self.sprites[2], 128, 256 + 200)
+        self.horse_4 = Horse(self.world, self.sprites[3], 128, 256 + 300)
+        self.horse_5 = Horse(self.world, self.sprites[4], 128, 256 + 400)
 
         x = int(WindowSize.WIDTH / 2)
         y = int(WindowSize.HEIGHT / 2)
 
-        self.all_horses = []
-
-        for i in range(5):
-
-            sprite_sheet = SpriteSheet("daisy")
-            sprite = sprite_sheet.get_sprite()
-
-        self.horse = Horse(self.world, sprite, 0, 0)
-
-        animation = AnimationSystem("daisy")
-        movement = MovementSystem(x - 128, y - 128, x + 128, y + 128)
+        self.animation = AnimationSystem("daisy")
+        self.movement = MovementSystem(0, 0, 1024, 768)
 
         # self.all_horses = [Enemy(self.renderer, self.factory, "doombat")]
 
-        self.world.add_system(animation)
-        self.world.add_system(movement)
+        self.world.add_system(self.animation)
+        self.world.add_system(self.movement)
 
         self.world.add_system(self.renderer)
 
-    def init_map(self, map_name):
+    def start_race(self):
+        if not self.race_running:
+            self.race_running = True
+            self.horse_1.velocity.vx = 3
+            self.horse_2.velocity.vx = 3
+            self.horse_3.velocity.vx = 3
+            self.horse_4.velocity.vx = 3
+            self.horse_5.velocity.vx = 3
+            self.sky_background.velocity.vx = -1
+            self.mountains_background.velocity.vx = -2
+            self.floor_background.velocity.vx = -3
 
-        map_data = self.db.get_map_npc(map_name)
-        map_npc = []
-
-        for data in map_data:
-            map_npc.append(data["npc"])
-            print(data)
-
-        # for npc in map_npc:
-        #    self.all_npc.append(NPC(self.renderer, self.factory, npc))
     """
     def get_sprites(self):
 
@@ -137,6 +140,7 @@ class Game:
                     game_input.key_up_event(event)
 
                 elif event.type == SDL_QUIT:
+                    self.clear()
                     self.running = False
                     break
 
@@ -149,6 +153,10 @@ class Game:
                 self.clear()
                 self.running = False
                 break
+
+            # Start
+            if game_input.was_key_pressed(SDLK_SPACE):
+                self.start_race()
 
             # # Player movement
             # if game_input.is_key_held(SDLK_RIGHT) and game_input.is_key_held(SDLK_UP):
@@ -217,7 +225,14 @@ class Game:
                 SDL_Delay(ms_per_frame - elapsed_time)
 
     def clear(self):
+
         self.horse_1.delete()
+        self.horse_2.delete()
+        self.horse_3.delete()
+        self.horse_4.delete()
+        self.sky_background.delete()
+        self.mountains_background.delete()
+        self.floor_background.delete()
 
         self.world.remove_system(self.animation)
         self.world.remove_system(self.movement)

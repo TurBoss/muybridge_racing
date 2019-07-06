@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+
+
 class Facing:
     def __init__(self):
         super(Facing, self).__init__()

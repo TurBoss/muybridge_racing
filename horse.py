@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from sdl2.ext import Resources, \
-    Entity
+from sdl2.ext import Resources, Entity
 
 from components.frames import Frames
 from components.motion import MotionType
@@ -32,9 +31,6 @@ class HorseData:
         super(HorseData, self).__init__()
 
         self.ai = True
-        self.ally = True
-
-        self.life = 100
 
 
 """

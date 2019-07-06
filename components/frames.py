@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+
+
 class Frames:
     def __init__(self):
         super(Frames, self).__init__()

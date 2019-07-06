@@ -1,8 +1,11 @@
+# -*- coding: utf-8 -*-
+
+
 class MotionType:
     def __init__(self):
         super(MotionType, self).__init__()
         self.motion_types = {"standing": 0,
-                             "running": 1,}
+                             "running": 1}
 
         self.motion_type = self.motion_types["standing"]
 

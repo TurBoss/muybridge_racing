@@ -21,8 +21,7 @@ from sdl2 import SDL_Delay, \
     SDLK_RETURN, \
     SDL_Quit
 
-from sdl2.ext import Resources, \
-    get_events
+from sdl2.ext import Resources, get_events
 
 from const import WindowSize, Colors
 from input import Input
