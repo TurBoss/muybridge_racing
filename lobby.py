@@ -23,17 +23,17 @@ from sdl2 import SDL_Delay, \
 
 from sdl2.ext import Resources, get_events
 
-from const import WindowSize, Colors
+from const import WindowSize, Colors, HorseNames
 from input import Input
-from lobby import Lobby
 from ui import Dialog
+from game import Game
 
 FPS = 60  # units.FPS
 MAX_FRAME_TIME = int(5 * (1000 / FPS))
 RESOURCES = Resources(__file__, 'resources')
 
 
-class Menu:
+class Lobby:
     def __init__(self, window, world, renderer, factory):
         self.window = window
         self.renderer = renderer
@@ -54,9 +54,17 @@ class Menu:
         self.background_sprite = self.factory.from_image(self.menu_bg)
         self.cursor_sprite = self.factory.from_image(self.menu_cursor)
 
-        self.text = {0: "START",
-                     1: "OPTIONS",
-                     2: "EXIT"}
+        self.horse_names = HorseNames()
+        self.horse_list = self.horse_names.get_horse_list()
+
+        self.player_choise = PlayerChoice()
+
+        self.text = {0: self.horse_list[0],
+                     1: self.horse_list[1],
+                     2: self.horse_list[2],
+                     3: self.horse_list[3],
+                     4: self.horse_list[4]
+                     }
 
         self.dialog = Dialog(self.factory,
                              font_size=32,
@@ -116,14 +124,14 @@ class Menu:
                 if self.cursor_position != 0:
                     self.cursor_position -= 1
             elif menu_input.was_key_pressed(SDLK_DOWN):
-                if self.cursor_position != 2:
+                if self.cursor_position != 4:
                     self.cursor_position += 1
 
             # Select option
             elif menu_input.was_key_pressed(SDLK_RETURN):
                 self.running = False
                 if self.cursor_position == 0:
-                    self.launch_lobby()
+                    self.launch_game()
 
             current_time = SDL_GetTicks()  # units.MS
             elapsed_time = current_time - last_update_time  # units.MS
@@ -140,9 +148,21 @@ class Menu:
             if elapsed_time < ms_per_frame:
                 SDL_Delay(ms_per_frame - elapsed_time)
 
-    def launch_lobby(self):
-        lobby = Lobby(self.window, self.world, self.renderer, self.factory)
-        lobby.run()
+    def launch_game(self):
+        game = Game(self.world, self.window, self.renderer, self.factory)
+        game.run()
 
         self.running = True
         self.run()
+
+
+class PlayerChoice:
+    def __init__(self):
+        self.selected_horse = None
+        self.bet_amount = 0
+
+    def select_horse(self, name):
+        self.selected_horse = name
+
+    def set_bet_amount(self, amount):
+        self.bet_amount = amount

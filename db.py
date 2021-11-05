@@ -20,6 +20,7 @@ DB = Resources(__file__, 'resources', 'db')
 
 class DataBase:
     """" Functions to get and set the database """
+
     def __init__(self):
         """ Get the database path """
         self.db_path = DB.get_path('database.sqlite')

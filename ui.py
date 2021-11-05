@@ -1,4 +1,12 @@
-# coding=utf-8
+# -*- coding: utf-8 -*-
+
+# ---------------------------------------------------------------------------
+# Filename:    menu.py
+# Created:     07/14/2019
+# Author:      TurBoss
+# E-mail:      j.l.toledano.l@gmail.com
+# License:     GNU GPL 3.0
+# ---------------------------------------------------------------------------
 
 from sdl2 import SDL_ClearError, \
     SDL_CreateTextureFromSurface, \
@@ -28,9 +36,6 @@ from sdl2.ext import Resources, \
     load_image, \
     subsurface
 
-from const import Colors
-from utils import count_chars
-
 RESOURCES = Resources(__file__, 'resources', 'ui')
 FONTS = Resources(__file__, 'resources', 'fonts')
 
@@ -43,7 +48,7 @@ class SoftSprite(SoftwareSprite):
         self.renderer = renderer
 
         if font is None:
-            font = FONTS.get_path("04B_20__.TTF")
+            font = FONTS.get_path("BebasKai.TTF")
         else:
             font = FONTS.get_path(font)
 

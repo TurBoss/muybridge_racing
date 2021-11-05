@@ -1,10 +1,17 @@
 # -*- coding: utf-8 -*-
+# ---------------------------------------------------------------------------
+# Filename:    const.py
+# Created:     03/16/2017
+# Author:      TurBoss
+# E-mail:      j.l.toledano.l@gmail.com
+# License:     GNU GPL 3.0
+# ---------------------------------------------------------------------------
 
 from sdl2 import SDL_GetTicks, \
     SDL_KEYUP, \
     SDL_KEYDOWN, \
     SDL_QUIT, \
-    SDL_Delay,\
+    SDL_Delay, \
     SDLK_ESCAPE, \
     SDLK_SPACE
 
@@ -17,7 +24,7 @@ from db import DataBase
 from input import Input
 from horse import Horse
 
-from components.spritesheet import SpriteSheet
+from spritesheet import SpriteSheet
 from systems.animation import AnimationSystem
 from systems.movement import MovementSystem
 
@@ -41,47 +48,54 @@ class Game:
         self.renderer = renderer
         self.factory = factory
 
-        self.sky_background = Background(self.world, 0, 0, 1920, 300, "test_sky")
-        self.mountains_background = Background(self.world, 0, 150, 1920, 300, "test_mountains")
-        self.floor_background = Background(self.world, 0, 300, 1920, 500, "test_floor")
+        # self.background = Background(self.world, self.renderer, "map.tmx")
 
         self.sprites = []
 
-        for i in range(5):
-            sprite_sheet = SpriteSheet("daisy")
-            sprite = sprite_sheet.get_sprite()
-            self.sprites.append(sprite)
+        sprite_sheet_1 = SpriteSheet("daisy", 128, 90, 16)
+        sprite_sheet_2 = SpriteSheet("daisy", 128, 90, 16)
+        sprite_sheet_3 = SpriteSheet("daisy", 128, 90, 16)
+        sprite_sheet_4 = SpriteSheet("daisy", 128, 90, 16)
+        sprite_sheet_5 = SpriteSheet("daisy", 128, 90, 16)
 
-        self.horse_1 = Horse(self.world, self.sprites[0], 128, 256)
-        self.horse_2 = Horse(self.world, self.sprites[1], 128, 256 + 100)
-        self.horse_3 = Horse(self.world, self.sprites[2], 128, 256 + 200)
-        self.horse_4 = Horse(self.world, self.sprites[3], 128, 256 + 300)
-        self.horse_5 = Horse(self.world, self.sprites[4], 128, 256 + 400)
+        self.horse_1 = Horse(self.world, sprite_sheet_1, 128, 256)
+        self.horse_2 = Horse(self.world, sprite_sheet_2, 128, 256 + 100)
+        self.horse_3 = Horse(self.world, sprite_sheet_3, 128, 256 + 200)
+        self.horse_4 = Horse(self.world, sprite_sheet_4, 128, 256 + 300)
+        self.horse_5 = Horse(self.world, sprite_sheet_5, 128, 256 + 400)
+
+        self.horse_1.motiontype.set("running")
+        self.horse_2.motiontype.set("standing")
+        self.horse_3.motiontype.set("standing")
+        self.horse_4.motiontype.set("standing")
+        self.horse_5.motiontype.set("standing")
 
         x = int(WindowSize.WIDTH / 2)
         y = int(WindowSize.HEIGHT / 2)
 
-        self.animation = AnimationSystem("daisy")
+        self.horse_1_anim = AnimationSystem(self.horse_1, sprite_sheet_1)
+
         self.movement = MovementSystem(0, 0, 1024, 768)
 
         # self.all_horses = [Enemy(self.renderer, self.factory, "doombat")]
 
-        self.world.add_system(self.animation)
         self.world.add_system(self.movement)
+
+        self.world.add_system(self.horse_1_anim)
 
         self.world.add_system(self.renderer)
 
     def start_race(self):
         if not self.race_running:
             self.race_running = True
+
+            self.horse_1.motiontype.set("running")
+
             self.horse_1.velocity.vx = 3
             self.horse_2.velocity.vx = 3
             self.horse_3.velocity.vx = 3
             self.horse_4.velocity.vx = 3
             self.horse_5.velocity.vx = 3
-            self.sky_background.velocity.vx = -1
-            self.mountains_background.velocity.vx = -2
-            self.floor_background.velocity.vx = -3
 
     """
     def get_sprites(self):
@@ -117,8 +131,8 @@ class Game:
 
         game_input = Input()
 
-        speed_x, speed_y = 2, 1
-        player_pos = [-100, -100]
+        # speed_x, speed_y = 2, 1
+        # player_pos = [-100, -100]
 
         # motion_type = self.player_motion_type
         # facing = self.player_facing
@@ -230,9 +244,10 @@ class Game:
         self.horse_2.delete()
         self.horse_3.delete()
         self.horse_4.delete()
-        self.sky_background.delete()
-        self.mountains_background.delete()
-        self.floor_background.delete()
+        self.horse_5.delete()
+        # self.sky_background.delete()
+        # self.mountains_background.delete()
+        # self.floor_background.delete()
 
-        self.world.remove_system(self.animation)
+        self.world.remove_system(self.horse_1_anim)
         self.world.remove_system(self.movement)

@@ -6,10 +6,6 @@ from sdl2.ext import Resources, \
 from components.frames import Frames
 from components.motion import MotionType
 from components.facing import Facing
-
-# from spell import Spell
-# from inventory import Inventory
-
 from components.velocity import Velocity
 
 RESOURCES = Resources(__file__, 'resources')

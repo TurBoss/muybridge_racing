@@ -1,1 +1,4 @@
+pyscroll
+pytmx
+numpy
 pysdl2

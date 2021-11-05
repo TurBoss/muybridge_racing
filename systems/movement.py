@@ -30,7 +30,7 @@ class MovementSystem(Applicator):
             # swidth, sheight = sprite.size
 
             if velocity.vx > 0:
-                sprite.x += random.randint(0, 3)
+                sprite.x += random.randint(1, 4)
 
             sprite.x += velocity.vx
             sprite.y += velocity.vy

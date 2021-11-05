@@ -53,6 +53,7 @@ def dice(dice_faces, num=1):
 
 class Timer:
     """ Timer """
+
     def __init__(self, ticks, activated=False):
         """ Initialize the timer """
         self.start_ticks = 0

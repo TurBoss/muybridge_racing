@@ -9,6 +9,8 @@
 # License:     GNU GPL 3.0
 # ---------------------------------------------------------------------------
 
+import logging
+
 from sdl2 import SDL_Rect, \
     SDL_RenderCopyEx, \
     SDL_FLIP_NONE, \
@@ -35,6 +37,11 @@ from menu import Menu
 
 # This can be either "software" or "texture"
 RENDERER = "software"
+
+logging.basicConfig(level=logging.DEBUG)
+
+LOG = logging.getLogger(__name__)
+LOG.setLevel(logging.DEBUG)
 
 
 class SoftwareRenderer(SoftwareSpriteRenderSystem):
@@ -88,11 +95,12 @@ class TextureRenderer(TextureSpriteRenderSystem):
 
 
 def main():
+    LOG.debug("INIT")
     screen_size = WindowSize.WIDTH, WindowSize.HEIGHT
 
     SDL_Init(SDL_INIT_EVERYTHING)
 
-    window = Window("Muybridge Racing 3000", screen_size)
+    window = Window("CyberMotor3000", screen_size)
     window.show()
 
     world = World()

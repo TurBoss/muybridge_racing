@@ -15,7 +15,8 @@ class Horse(Entity):
     def __init__(self, world, sprite, posx=0, posy=0):
         super(Horse, self).__init__()
 
-        self.sprite = sprite
+        self.sprite = sprite.get_sprite()
+        self.sprite_data = sprite
         self.sprite.position = posx, posy
 
         self.frames = Frames()
@@ -24,6 +25,9 @@ class Horse(Entity):
         self.velocity = Velocity()
 
         self.horse_data = HorseData()
+
+    def get_sprite_data(self):
+        return self.sprite_data
 
 
 class HorseData:

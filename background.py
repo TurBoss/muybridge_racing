@@ -1,38 +1,60 @@
 # -*- coding: utf-8 -*-
+# ---------------------------------------------------------------------------
+# Filename:    const.py
+# Created:     07/15/2019
+# Author:      TurBoss
+# E-mail:      j.l.toledano.l@gmail.com
+# License:     GNU GPL 3.0
+# ---------------------------------------------------------------------------
 
-from sdl2 import SDL_CreateRGBSurface, SDL_SWSURFACE, SDL_Rect, SDL_BlitSurface
-from sdl2.ext import Resources, Entity, load_image, SoftwareSprite
+from sdl2 import SDL_CreateRGBSurface, \
+    SDL_SWSURFACE, \
+    SDL_BlitSurface, \
+    SDL_Rect
 
-from components.velocity import Velocity
+from sdl2.ext import Resources, \
+    load_image, \
+    subsurface, \
+    SoftwareSprite
 
-RESOURCES = Resources(__file__, 'resources')
+import pyscroll
+from pytmx.util_pysdl2 import load_pysdl2
+
+from const import WindowSize
+
+MAPS = Resources(__file__, 'resources', 'maps')
 
 
-class Background(Entity):
-    """ Background """
+class Background:
 
-    def __init__(self, world, posx, posy, width, height, mame):
-        super(Background, self).__init__()
+    def __init__(self, filename, renderer):
+        # Load TMX data
+        self.tmx_data = load_pysdl2(filename=filename, renderer=renderer)
 
-        self.frame = 0
-        self.velocity = Velocity()
+        # Make data source for the map
+        self.map_data = pyscroll.TiledMapData(self.tmx_data)
 
-        tile = "{}.png".format(mame)
+        # Make the scrolling layer
+        screen_size = (400, 400)
+        map_layer = pyscroll.BufferedRenderer(self.map_data, screen_size)
 
-        sprite_path = RESOURCES.get_path(tile)
+        # make the pygame SpriteGroup with a scrolling map
+        group = pyscroll.PyscrollGroup(map_layer=map_layer)
 
-        tile_surface = load_image(sprite_path)
+        # Add sprites to the group
+        group.add(sprite)
 
-        surface = SDL_CreateRGBSurface(SDL_SWSURFACE,
-                                            1920,
-                                            768,
-                                            32,
-                                            0x000000FF,
-                                            0x0000FF00,
-                                            0x00FF0000,
-                                            0xFF000000)
+        # Center the layer and sprites on a sprite
+        group.center(sprite.rect.center)
 
-        rect = SDL_Rect(posx, posy, width, height)
-        SDL_BlitSurface(tile_surface, None, surface, rect)
+        # Draw the layer
+        # If the map covers the entire screen, do not clear the screen:
+        # Clearing the screen is not needed since the map will clear it when drawn
+        # This map covers the screen, so no clearing!
+        group.draw(screen)
 
-        self.sprite = SoftwareSprite(surface.contents, True)
+        # adjust the zoom (out)
+        map_layer.zoom = .5
+
+        # adjust the zoom (in)
+        map_layer.zoom = 2.0

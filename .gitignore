@@ -60,3 +60,9 @@ target/
 \.idea/
 
 venv/
+
+.pydevproject
+
+.project
+
+.settings/
